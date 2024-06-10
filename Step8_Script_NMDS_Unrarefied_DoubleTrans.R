@@ -50,9 +50,6 @@ community_NJ2022 <- as.data.frame(community_NJ2022)
 rownames(community_NJ2022) <- community_NJ2022[,1]
 community_NJ2022[,1] <- NULL
 community_NJ2022 <- as.data.frame(t(community_NJ2022))
-# community_NJ2022 <- community_NJ2022[, !colSums(community_NJ2022)==0]
-# community_NJ2022 <- community_NJ2022[!rowSums(community_NJ2022)==0,]
-
 
 env <- readRDS(paste0(proj.path,"/02_NJ2022_Miseq_5119441/R_Environment/env_unrarefied_MicroDecon.rds"))
 env$Depth <- ifelse(grepl("bottom", env$Niskin.sample), "Bottom", "Surface")
@@ -73,10 +70,7 @@ community_NJ2022 <- community_NJ2022[colorder,]
 data.nmds <- decostand(community_NJ2022, method="total")
 data.nmds <- decostand(data.nmds, method="max")
 
-
-
-ord.NMDS=metaMDS(community_NJ2022, k=2, distace ="bray", trymax=100) #stress: 0.1654
-ord.NMDS=metaMDS(data.nmds, k=2, distace ="bray", trymax=100) #stress: 0.1654
+ord.NMDS=metaMDS(data.nmds, k=2, distace ="bray", trymax=100)
 
 Scores_nmds <- scores(ord.NMDS)
 Scores_nmds <- Scores_nmds[["sites"]]
@@ -122,7 +116,7 @@ community_eDNA <- data.nmds
 groups <- c(env$Zone)
 indval = multipatt(community_eDNA, groups, duleg = TRUE,
                    control = how(nperm=9999)) 
-indval_all <- indval[["sign"]]
+
 summary(indval, indvalcomp = TRUE)
 
 #indicator species analysis for trawl data
@@ -134,11 +128,7 @@ data_morph[, 1] <- NULL
 groups2 <- c("Offshore", "Offshore", "Transition", "Transition", "Coast", "Transition", "Offshore", "Coast", "Transition", "Coast", "Coast", "Transition", "Transition", "Coast", "Transition", "Transition", "Coast")
 indval2 = multipatt(data_morph, groups2, duleg = TRUE,
                    control = how(nperm=9999)) 
-indval3 = multipatt(data_morph, groups2,
-                    control = how(nperm=9999)) 
-summary(indval3, indvalcomp = TRUE)
-indval_all2 <- indval2[["sign"]]
-indval_all2
+
 summary(indval2, indvalcomp = TRUE)
 
 
