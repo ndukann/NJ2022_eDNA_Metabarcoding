@@ -32,7 +32,6 @@ for (opties in libraries){
 
 proj.path <- here("/home/genomics/ndukan/01_Zero-Impact/Temporal_Analysis")
 
-table_cleaned <- readxl::read_excel(paste0(proj.path, "/02_NJ2022_Miseq_5119441/NJ2022_Taxonomic_Assignment_Tables/Results_MicroDecon/table_unrarefied_concatenated_FullTaxonomicAssignment_clean_MicroDecon.xlsx"))
 env <- readRDS(paste0(proj.path,"/02_NJ2022_Miseq_5119441/R_Environment/env_unrarefied_MicroDecon.rds"))
 community_NJ2022 <- readxl::read_excel(paste0(proj.path,"/02_NJ2022_Miseq_5119441/NJ2022_Taxonomic_Assignment_Tables/Results_MicroDecon/Table_FishSpecies_MicroDecon.xlsx"))
 community_NJ2022 <- as.data.frame(community_NJ2022)
@@ -43,10 +42,6 @@ community_NJ2022 <- as.data.frame(t(community_NJ2022))
 colorder <- c(env$Niskin.sample)
 community_NJ2022 <-community_NJ2022[colorder,]
 
-sardine <- as.data.frame(community_NJ2022[rownames(community_NJ2022)=="Sardina pilchardus",])
-sardine <- t(sardine)
-mean(sardine)
-sd(sardine)
 #transform the data
 community_NJ2022_transformed <- decostand(community_NJ2022, method="total")
 community_NJ2022_transformed <- decostand(community_NJ2022_transformed, method="max")
@@ -72,7 +67,7 @@ write.xlsx(total_rel,
            paste0(proj.path,"/02_NJ2022_Miseq_5119441/NJ2022_Taxonomic_Assignment_Tables/Results_MicroDecon/Total_RelativeAbundances.xlsx"), 
            sheetName = "Sheet1", colNames = TRUE, rowNames = TRUE, append = FALSE)
 
-#adding this step better orders the species
+#adding this step orders the species better in this dataset
 Fish_dendro_nozero2 <- as.dendrogram(hclust(d=dist(x = relative_abundance), method = "ward.D"))
 dendro_plot_nozero2 <- ggdendrogram(data = Fish_dendro_nozero2, rotate=T)
 print(dendro_plot_nozero2)
